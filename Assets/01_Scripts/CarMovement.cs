@@ -1,81 +1,87 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class CarMovement : MonoBehaviour
 {
-	public float MaxSpeed = 10f;   // Velocidad máxima
-	public float acc = 5f;         // Fuerza de aceleración
-	public float steering = 200f;  // Velocidad de giro
-	public float normalDrag = 0.5f; // resistencia normal
-	public float stopDrag = 5f;     // resistencia al soltar W
+    [Header("Movimiento")]
+    public float maxSpeed = 12f;       // Velocidad máxima
+    public float acceleration = 8f;    // Fuerza de aceleración
+    public float steering = 180f;      // Velocidad de giro
 
-	private Rigidbody2D rb;
-	private float X; // dirección (giro)
-	private float Y; // aceleración
+    [Header("Fricción")]
+    public float normalDrag = 0.5f;    // Resistencia al acelerar
+    public float stopDrag = 4f;        // Resistencia al soltar acelerador
+    public float lateralFriction = 2f; // Fuerza contra el deslizamiento lateral
 
-	private void Start()
-	{
-		rb = GetComponent<Rigidbody2D>();
-		rb.drag = normalDrag;
-	}
+    private Rigidbody2D _rb;
+    private float _steerInput;
+    private float _accelInput;
 
-	private void Update()
-	{
-		HandleInput();
-	}
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _rb.drag = normalDrag;
+        _rb.gravityScale = 0; // aseguramos que no caiga
+    }
 
-	private void FixedUpdate()
-	{
-		// Aplicar fuerza hacia adelante (solo con W/S)
-		Vector2 forwardMove = transform.up * (Y * acc);
-		rb.AddForce(forwardMove);
+    private void Update()
+    {
+        ReadInput();
+    }
 
-		// Rotar el coche con A/D
-		if (Mathf.Abs(Y) > 0.1f) // solo gira si está acelerando
-		{
-			rb.rotation += X * steering * Time.fixedDeltaTime;
-		}
+    private void FixedUpdate()
+    {
+        ApplyEngineForce();
+        ApplySteering();
+        ApplyLateralFriction();
+        LimitSpeed();
+        UpdateDrag();
+    }
 
-		// Limitar velocidad máxima
-		if (rb.velocity.magnitude > MaxSpeed)
-		{
-			rb.velocity = rb.velocity.normalized * MaxSpeed;
-		}
+    private void ReadInput()
+    {
+        _accelInput = 0f;
+        _steerInput = 0f;
 
-		// Ajustar drag dinámicamente
-		if (Input.GetKey(KeyCode.W))
-		{
-			rb.drag = normalDrag; // libre al acelerar
-		}
-		else
-		{
-			rb.drag = stopDrag; // frena en seco al soltar W
-		}
-	}
+        if (Input.GetKey(KeyCode.W)) _accelInput = 1f;
+        else if (Input.GetKey(KeyCode.S)) _accelInput = -1f;
 
-	private void HandleInput()
-	{
-		X = 0;
-		Y = 0;
+        if (Input.GetKey(KeyCode.A)) _steerInput = 1f;
+        else if (Input.GetKey(KeyCode.D)) _steerInput = -1f;
+    }
 
-		// Acelerar con W
-		if (Input.GetKey(KeyCode.W))
-		{
-			Y = 1;
-		}
-		// Retroceder con S (opcional)
-		else if (Input.GetKey(KeyCode.S))
-		{
-			Y = -1;
-		}
+    private void ApplyEngineForce()
+    {
+        Vector2 force = transform.up * (_accelInput * acceleration);
+        _rb.AddForce(force, ForceMode2D.Force);
+    }
 
-		// Girar con A/D (invertido según tu pedido anterior)
-		if (Input.GetKey(KeyCode.A))
-		{
-			X = 1; // A = derecha
-		}
-		else if (Input.GetKey(KeyCode.D))
-		{
-			X = -1; // D = izquierda
-		}
-	}
+    private void ApplySteering()
+    {
+        if (Mathf.Abs(_accelInput) > 0.1f)
+        {
+            float speedFactor = _rb.velocity.magnitude / maxSpeed;
+            _rb.rotation += _steerInput * steering * speedFactor * Time.fixedDeltaTime;
+        }
+    }
+
+    private void ApplyLateralFriction()
+    {
+        Vector2 lateralVel = Vector2.Dot(_rb.velocity, transform.right) * transform.right;
+        _rb.AddForce(-lateralVel * lateralFriction, ForceMode2D.Force);
+    }
+
+    private void LimitSpeed()
+    {
+        if (_rb.velocity.magnitude > maxSpeed)
+        {
+            _rb.velocity = _rb.velocity.normalized * maxSpeed;
+        }
+    }
+
+    private void UpdateDrag()
+    {
+        float targetDrag = (_accelInput > 0) ? normalDrag : stopDrag;
+        _rb.drag = Mathf.Lerp(_rb.drag, targetDrag, Time.fixedDeltaTime * 5f);
+    }
 }
