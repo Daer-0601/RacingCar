@@ -21,10 +21,16 @@ public class MainMenu : MonoBehaviour
 		optionMenu.SetActive(false);
 	}
 
-	public void QuitGame()
-	{
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        // Detener el modo Play en el Editor
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // Cerrar la aplicación en una build real
         Application.Quit();
-	}
+#endif
+    }
 
     public void PlayGame()
     {
