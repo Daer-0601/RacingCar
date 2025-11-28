@@ -3,7 +3,7 @@ using System.IO.Ports;
 
 public class ArduinoSteering : MonoBehaviour
 {
-    public string portName = "COM3"; // cambia según tu puerto
+    public string portName = "COM3"; 
     public int baudRate = 115200;
     public CarMovement carMovement;
 
