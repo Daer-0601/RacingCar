@@ -951,11 +951,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab9f2db86e0baa4483d4f6e41c1e19f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 12
-  acc: 8
+  maxSpeed: 12
+  acceleration: 8
   steering: 200
   normalDrag: 0.5
   stopDrag: 5
+  lateralFriction: 2
+  minSpeedToSteer: 0.1
+  steeringDeadzone: 50
+  useKeyboardInput: 1
 --- !u!114 &415139952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1745,6 +1749,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6967876001615698340, guid: b4a4540679fbd294e80e62d7ef042c1a, type: 3}
   m_PrefabInstance: {fileID: 797937289}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &799702658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799702660}
+  - component: {fileID: 799702659}
+  m_Layer: 0
+  m_Name: ArduinoManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &799702659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799702658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1acc6abd557c0d49992d1d2cfb4b4a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portName: COM3
+  baudRate: 115200
+  carMovement: {fileID: 415139951}
+--- !u!4 &799702660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799702658}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &964797029
 GameObject:
   m_ObjectHideFlags: 0
