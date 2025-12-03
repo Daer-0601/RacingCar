@@ -8,8 +8,8 @@ public class MainMenu : MonoBehaviour
     [Header("Paneles del Menú")]
     public GameObject optionMenu;
     public GameObject mainMenu;
-    public GameObject gameModeMenu; // Panel para elegir modo de juego
-    public GameObject levelSelectMenu; // Panel para elegir nivel
+    public GameObject playerSelectMenu; // Panel para elegir número de jugadores
+    public GameObject levelSelectMenu;  // Panel para elegir nivel
 
     void Start()
     {
@@ -23,8 +23,8 @@ public class MainMenu : MonoBehaviour
         // Asegurar que el menú principal está visible al inicio
         if (mainMenu != null)
             mainMenu.SetActive(true);
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(false);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(false);
         if (levelSelectMenu != null)
             levelSelectMenu.SetActive(false);
         if (optionMenu != null)
@@ -37,8 +37,8 @@ public class MainMenu : MonoBehaviour
             mainMenu.SetActive(false);
         if (optionMenu != null)
             optionMenu.SetActive(true);
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(false);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(false);
         if (levelSelectMenu != null)
             levelSelectMenu.SetActive(false);
     }
@@ -49,39 +49,51 @@ public class MainMenu : MonoBehaviour
             mainMenu.SetActive(true);
         if (optionMenu != null)
             optionMenu.SetActive(false);
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(false);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(false);
         if (levelSelectMenu != null)
             levelSelectMenu.SetActive(false);
     }
 
-    // Cuando presiona el botón "Jugar" - muestra opciones de modo
+    // Cuando presiona el botón "Jugar" - muestra opciones de jugadores
     public void PlayGame()
     {
         if (mainMenu != null)
             mainMenu.SetActive(false);
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(true);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(true);
         if (optionMenu != null)
             optionMenu.SetActive(false);
     }
 
-    // Seleccionar modo: Solo vs Bot
-    public void SelectSoloVsBot()
+    // ========== SELECCIÓN DE NÚMERO DE JUGADORES ==========
+
+    // Seleccionar 2 jugadores
+    public void Select2Players()
     {
         if (GameModeManager.Instance != null)
         {
-            GameModeManager.Instance.SetGameMode(GameMode.SoloVsBot);
+            GameModeManager.Instance.SetGameMode(GameMode.TwoPlayers);
         }
         OpenLevelSelectMenu();
     }
 
-    // Seleccionar modo: 1 vs 1
-    public void SelectOneVsOne()
+    // Seleccionar 3 jugadores
+    public void Select3Players()
     {
         if (GameModeManager.Instance != null)
         {
-            GameModeManager.Instance.SetGameMode(GameMode.OneVsOne);
+            GameModeManager.Instance.SetGameMode(GameMode.ThreePlayers);
+        }
+        OpenLevelSelectMenu();
+    }
+
+    // Seleccionar 4 jugadores
+    public void Select4Players()
+    {
+        if (GameModeManager.Instance != null)
+        {
+            GameModeManager.Instance.SetGameMode(GameMode.FourPlayers);
         }
         OpenLevelSelectMenu();
     }
@@ -89,11 +101,13 @@ public class MainMenu : MonoBehaviour
     // Mostrar menú de selección de nivel
     public void OpenLevelSelectMenu()
     {
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(false);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(false);
         if (levelSelectMenu != null)
             levelSelectMenu.SetActive(true);
     }
+
+    // ========== SELECCIÓN DE NIVEL ==========
 
     // Seleccionar Nivel 1
     public void SelectLevel1()
@@ -125,24 +139,26 @@ public class MainMenu : MonoBehaviour
         LoadGameScene();
     }
 
-    // Volver al menú principal desde la selección de modo
+    // ========== NAVEGACIÓN ==========
+
+    // Volver al menú principal desde la selección de jugadores
     public void BackToMainMenu()
     {
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(false);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(false);
         if (levelSelectMenu != null)
             levelSelectMenu.SetActive(false);
         if (mainMenu != null)
             mainMenu.SetActive(true);
     }
 
-    // Volver a la selección de modo desde la selección de nivel
-    public void BackToGameModeMenu()
+    // Volver a la selección de jugadores desde la selección de nivel
+    public void BackToPlayerSelectMenu()
     {
         if (levelSelectMenu != null)
             levelSelectMenu.SetActive(false);
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(true);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(true);
     }
 
     // Cargar la escena del juego según el nivel seleccionado

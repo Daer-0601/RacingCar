@@ -7,7 +7,6 @@ public class CarMovement : MonoBehaviour
     public float maxSpeed = 12f;
     public float acceleration = 8f;
     public float reverseSpeed = 6f;  // velocidad en reversa
-    public float turboMultiplier = 1.7f; // turbo
 
     [Header("Giro")]
     public float steering = 250f;
@@ -27,7 +26,6 @@ public class CarMovement : MonoBehaviour
 
     private float _steerInput = 0f;
     private float _accelInput = 0f; // 1 acelera -1 frena/retro
-    private bool _turboActive = false;
 
     private bool _useArduinoInput = false;
 
@@ -116,32 +114,15 @@ public class CarMovement : MonoBehaviour
     }
 
     // ---------------------------
-    // TURBO desde Arduino
-    // ---------------------------
-    public void SetTurboInput(int turbo)
-    {
-        _useArduinoInput = true;
-        _turboActive = (turbo == 1);
-    }
-
-    // ---------------------------
     // MOTOR
     // ---------------------------
     private void ApplyEngineForce()
     {
-        float finalAccel = _accelInput;
-
         // Acelerar
         if (_accelInput > 0f)
         {
-            float accelValue = acceleration;
-
-            if (_turboActive)
-                accelValue *= turboMultiplier;
-
-            _rb.AddForce(transform.up * accelValue, ForceMode2D.Force);
+            _rb.AddForce(transform.up * acceleration, ForceMode2D.Force);
         }
-
         // Freno / Retroceso
         else if (_accelInput < 0f)
         {
@@ -169,10 +150,8 @@ public class CarMovement : MonoBehaviour
 
     private void LimitSpeed()
     {
-        float currentMax = _turboActive ? maxSpeed * turboMultiplier : maxSpeed;
-
-        if (_rb.velocity.magnitude > currentMax)
-            _rb.velocity = _rb.velocity.normalized * currentMax;
+        if (_rb.velocity.magnitude > maxSpeed)
+            _rb.velocity = _rb.velocity.normalized * maxSpeed;
     }
 
     private void UpdateDrag()

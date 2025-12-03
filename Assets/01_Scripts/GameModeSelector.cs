@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameModeSelector : MonoBehaviour
 {
     [Header("Referencias UI")]
-    public GameObject gameModeMenu;
+    public GameObject playerSelectMenu;
     public GameObject mainMenu;
 
     void Start()
@@ -17,35 +17,50 @@ public class GameModeSelector : MonoBehaviour
         }
     }
 
-    public void SelectSoloVsBot()
+    public void Select2Players()
     {
         if (GameModeManager.Instance != null)
         {
-            GameModeManager.Instance.SetGameMode(GameMode.SoloVsBot);
+            GameModeManager.Instance.SetGameMode(GameMode.TwoPlayers);
         }
         LoadGame();
     }
 
-    public void SelectOneVsOne()
+    public void Select3Players()
     {
         if (GameModeManager.Instance != null)
         {
-            GameModeManager.Instance.SetGameMode(GameMode.OneVsOne);
+            GameModeManager.Instance.SetGameMode(GameMode.ThreePlayers);
+        }
+        LoadGame();
+    }
+
+    public void Select4Players()
+    {
+        if (GameModeManager.Instance != null)
+        {
+            GameModeManager.Instance.SetGameMode(GameMode.FourPlayers);
         }
         LoadGame();
     }
 
     public void BackToMainMenu()
     {
-        if (gameModeMenu != null)
-            gameModeMenu.SetActive(false);
+        if (playerSelectMenu != null)
+            playerSelectMenu.SetActive(false);
         if (mainMenu != null)
             mainMenu.SetActive(true);
     }
 
     private void LoadGame()
     {
-        SceneManager.LoadScene("Level_01");
+        string sceneName = "Level_01";
+        
+        if (GameModeManager.Instance != null)
+        {
+            sceneName = GameModeManager.Instance.GetLevelSceneName();
+        }
+        
+        SceneManager.LoadScene(sceneName);
     }
 }
-

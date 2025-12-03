@@ -3,7 +3,6 @@
 // Botones
 #define ACCEL_PIN 8      // Acelerador
 #define BRAKE_PIN 3      // Freno
-#define TURBO_PIN 4      // Turbo
 
 // Filtro del volante
 float filteredAngle = 0.0;
@@ -18,7 +17,6 @@ void setup() {
   // Botones en modo PULLUP (presionado = LOW)
   pinMode(ACCEL_PIN, INPUT_PULLUP);
   pinMode(BRAKE_PIN, INPUT_PULLUP);
-  pinMode(TURBO_PIN, INPUT_PULLUP);
 }
 
 void loop() {
@@ -34,17 +32,14 @@ void loop() {
   // -------------------- Botones --------------------
   int accel = (digitalRead(ACCEL_PIN) == LOW) ? 1 : 0;
   int brake = (digitalRead(BRAKE_PIN) == LOW) ? 1 : 0;
-  int turbo = (digitalRead(TURBO_PIN) == LOW) ? 1 : 0;
 
   // -------------------- Formato enviado --------------------
-  //     ANGULO,ACELERAR,FRENO,TURBO
+  //     ANGULO,ACELERAR,FRENO
   Serial.print((int)filteredAngle);
   Serial.print(",");
   Serial.print(accel);
   Serial.print(",");
-  Serial.print(brake);
-  Serial.print(",");
-  Serial.println(turbo);
+  Serial.println(brake);
 
   delay(16); // 60 FPS
 }

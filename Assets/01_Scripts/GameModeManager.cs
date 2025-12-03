@@ -2,15 +2,17 @@ using UnityEngine;
 
 public enum GameMode
 {
-    SoloVsBot,      // Un jugador con Arduino vs Bot
-    OneVsOne        // Un jugador con Arduino vs Un jugador con teclado
+    TwoPlayers,     // 2 jugadores
+    ThreePlayers,   // 3 jugadores
+    FourPlayers     // 4 jugadores
 }
 
 public class GameModeManager : MonoBehaviour
 {
     public static GameModeManager Instance { get; private set; }
 
-    public GameMode CurrentGameMode { get; private set; } = GameMode.SoloVsBot;
+    public GameMode CurrentGameMode { get; private set; } = GameMode.TwoPlayers;
+    public int PlayerCount { get; private set; } = 2;
     public int SelectedLevel { get; private set; } = 1; // Nivel seleccionado (1, 2 o 3)
 
     void Awake()
@@ -30,7 +32,43 @@ public class GameModeManager : MonoBehaviour
     public void SetGameMode(GameMode mode)
     {
         CurrentGameMode = mode;
-        Debug.Log("Modo de juego seleccionado: " + mode.ToString());
+        
+        // Actualizar el número de jugadores según el modo
+        switch (mode)
+        {
+            case GameMode.TwoPlayers:
+                PlayerCount = 2;
+                break;
+            case GameMode.ThreePlayers:
+                PlayerCount = 3;
+                break;
+            case GameMode.FourPlayers:
+                PlayerCount = 4;
+                break;
+        }
+        
+        Debug.Log("Modo de juego seleccionado: " + mode.ToString() + " (" + PlayerCount + " jugadores)");
+    }
+
+    public void SetPlayerCount(int count)
+    {
+        PlayerCount = Mathf.Clamp(count, 2, 4);
+        
+        // Actualizar el modo según el número de jugadores
+        switch (PlayerCount)
+        {
+            case 2:
+                CurrentGameMode = GameMode.TwoPlayers;
+                break;
+            case 3:
+                CurrentGameMode = GameMode.ThreePlayers;
+                break;
+            case 4:
+                CurrentGameMode = GameMode.FourPlayers;
+                break;
+        }
+        
+        Debug.Log("Número de jugadores: " + PlayerCount);
     }
 
     public void SetSelectedLevel(int level)
@@ -44,4 +82,3 @@ public class GameModeManager : MonoBehaviour
         return "Level_0" + SelectedLevel;
     }
 }
-

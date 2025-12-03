@@ -36,18 +36,17 @@ public class ArduinoSteering : MonoBehaviour
             string line = serial.ReadLine().Trim();
             string[] parts = line.Split(',');
 
-            // Esperamos: ANGULO,ACEL,BRK,TURBO (4 valores)
-            if (parts.Length == 4)
+            // Esperamos: ANGULO,ACEL,BRK (3 valores) o ANGULO,ACEL,BRK,TURBO (4 valores - turbo ignorado)
+            if (parts.Length >= 3)
             {
                 int angle = int.Parse(parts[0]);
                 int accel = int.Parse(parts[1]);
                 int brake = int.Parse(parts[2]);
-                int turbo = int.Parse(parts[3]);
 
                 carMovement.SetSteerInput(angle);
                 carMovement.SetAccelInput(accel);
                 carMovement.SetBrakeInput(brake);
-                carMovement.SetTurboInput(turbo);
+                // Turbo eliminado - ya no se usa
             }
             else
             {
