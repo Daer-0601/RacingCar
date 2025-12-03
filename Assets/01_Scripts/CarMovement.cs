@@ -6,24 +6,29 @@ public class CarMovement : MonoBehaviour
     [Header("Movimiento")]
     public float maxSpeed = 12f;
     public float acceleration = 8f;
-    public float steering = 250f; // aumentado para más sensibilidad
+    public float reverseSpeed = 6f;  // velocidad en reversa
+    public float turboMultiplier = 1.7f; // turbo
+
+    [Header("Giro")]
+    public float steering = 250f;
+    public float minSpeedToSteer = 0.1f;
+    public float steeringDeadzone = 20f;
+    public float steeringSensitivity = 1.5f;
 
     [Header("Fricción")]
     public float normalDrag = 0.5f;
     public float stopDrag = 4f;
     public float lateralFriction = 2f;
 
-    [Header("Control de giro")]
-    public float minSpeedToSteer = 0.1f;
-    public float steeringDeadzone = 20f; // reducido para mayor respuesta
-    public float steeringSensitivity = 1.5f; // nuevo parámetro ajustable
-
     [Header("Controles")]
     public bool useKeyboardInput = true;
 
     private Rigidbody2D _rb;
-    private float _steerInput;
-    private float _accelInput;
+
+    private float _steerInput = 0f;
+    private float _accelInput = 0f; // 1 acelera -1 frena/retro
+    private bool _turboActive = false;
+
     private bool _useArduinoInput = false;
 
     void Awake()
@@ -37,8 +42,15 @@ public class CarMovement : MonoBehaviour
     {
         if (!_useArduinoInput && useKeyboardInput)
         {
-            _accelInput = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) ? 1f : 0f;
+            // Acelerar / Retroceder
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+                _accelInput = 1f;
+            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+                _accelInput = -1f;
+            else
+                _accelInput = 0f;
 
+            // Dirección
             _steerInput = 0f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 _steerInput = -1f;
@@ -46,9 +58,11 @@ public class CarMovement : MonoBehaviour
                 _steerInput = 1f;
         }
 
+        // Evitar giros cuando está quieto
         if (_rb.velocity.magnitude < 0.05f)
         {
             _steerInput = 0f;
+            _rb.angularVelocity = 0f;
         }
     }
 
@@ -62,7 +76,7 @@ public class CarMovement : MonoBehaviour
     }
 
     // ---------------------------
-    // Giro desde Arduino
+    // VOLANTE desde Arduino
     // ---------------------------
     public void SetSteerInput(int angle)
     {
@@ -74,9 +88,9 @@ public class CarMovement : MonoBehaviour
         }
         else
         {
-            float adjustedAngle = angle - (steeringDeadzone * Mathf.Sign(angle));
+            float adjusted = angle - steeringDeadzone * Mathf.Sign(angle);
             _steerInput = Mathf.Clamp(
-                (adjustedAngle / (300f - steeringDeadzone)) * steeringSensitivity,
+                (adjusted / (450f - steeringDeadzone)) * steeringSensitivity,
                 -1f,
                 1f
             );
@@ -84,20 +98,54 @@ public class CarMovement : MonoBehaviour
     }
 
     // ---------------------------
-    // Acelerador desde Arduino
+    // ACELERADOR desde Arduino
     // ---------------------------
     public void SetAccelInput(int accel)
     {
         _useArduinoInput = true;
-        _accelInput = Mathf.Clamp01(accel);
+        _accelInput = accel == 1 ? 1f : (_accelInput > 0 ? 0f : _accelInput);
     }
 
+    // ---------------------------
+    // FRENO + RETROCESO desde Arduino
+    // ---------------------------
+    public void SetBrakeInput(int brake)
+    {
+        _useArduinoInput = true;
+        _accelInput = brake == 1 ? -1f : (_accelInput < 0 ? 0f : _accelInput);
+    }
+
+    // ---------------------------
+    // TURBO desde Arduino
+    // ---------------------------
+    public void SetTurboInput(int turbo)
+    {
+        _useArduinoInput = true;
+        _turboActive = (turbo == 1);
+    }
+
+    // ---------------------------
+    // MOTOR
+    // ---------------------------
     private void ApplyEngineForce()
     {
+        float finalAccel = _accelInput;
+
+        // Acelerar
         if (_accelInput > 0f)
         {
-            Vector2 force = transform.up * (_accelInput * acceleration);
-            _rb.AddForce(force, ForceMode2D.Force);
+            float accelValue = acceleration;
+
+            if (_turboActive)
+                accelValue *= turboMultiplier;
+
+            _rb.AddForce(transform.up * accelValue, ForceMode2D.Force);
+        }
+
+        // Freno / Retroceso
+        else if (_accelInput < 0f)
+        {
+            _rb.AddForce(transform.up * (-reverseSpeed), ForceMode2D.Force);
         }
     }
 
@@ -111,27 +159,25 @@ public class CarMovement : MonoBehaviour
             float steerAmount = _steerInput * steering * speedFactor * Time.fixedDeltaTime;
             _rb.rotation += steerAmount;
         }
-        else if (speed < 0.05f)
-        {
-            _rb.angularVelocity = 0f;
-        }
     }
 
     private void ApplyLateralFriction()
     {
-        Vector2 lateralVel = Vector2.Dot(_rb.velocity, transform.right) * (Vector2)transform.right;
+        Vector2 lateralVel = Vector2.Dot(_rb.velocity, transform.right) * transform.right;
         _rb.AddForce(-lateralVel * lateralFriction, ForceMode2D.Force);
     }
 
     private void LimitSpeed()
     {
-        if (_rb.velocity.magnitude > maxSpeed)
-            _rb.velocity = _rb.velocity.normalized * maxSpeed;
+        float currentMax = _turboActive ? maxSpeed * turboMultiplier : maxSpeed;
+
+        if (_rb.velocity.magnitude > currentMax)
+            _rb.velocity = _rb.velocity.normalized * currentMax;
     }
 
     private void UpdateDrag()
     {
-        float targetDrag = (_accelInput > 0.01f) ? normalDrag : stopDrag;
-        _rb.drag = Mathf.Lerp(_rb.drag, targetDrag, Time.fixedDeltaTime * 5f);
+        float target = (_accelInput != 0f) ? normalDrag : stopDrag;
+        _rb.drag = Mathf.Lerp(_rb.drag, target, Time.fixedDeltaTime * 4f);
     }
 }

@@ -2084,8 +2084,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 878879822}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 155.7, y: 44.7, z: 105.89504}
-  m_LocalScale: {x: 14, y: 11, z: 1}
+  m_LocalPosition: {x: 156.7104, y: 44.8684, z: 105.89504}
+  m_LocalScale: {x: 16.125536, y: 13.577949, z: 1}
   m_Children: []
   m_Father: {fileID: 1200132971}
   m_RootOrder: 0
@@ -4856,13 +4856,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 12
   acceleration: 8
+  reverseSpeed: 6
+  turboMultiplier: 1.7
   steering: 200
-  normalDrag: 0.5
-  stopDrag: 5
-  lateralFriction: 2
   minSpeedToSteer: 0.1
   steeringDeadzone: 20
   steeringSensitivity: 1.5
+  normalDrag: 0.5
+  stopDrag: 5
+  lateralFriction: 2
   useKeyboardInput: 1
 --- !u!212 &1840660562
 SpriteRenderer:

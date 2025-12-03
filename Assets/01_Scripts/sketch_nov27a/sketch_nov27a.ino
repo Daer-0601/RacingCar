@@ -1,34 +1,50 @@
-#define POT_STEER A0     // Potenciómetro del volante
-#define ACCEL_PIN 2      // Botón del acelerador
+#define POT_STEER A0     // Volante (potenciómetro)
 
-float filteredAngle = 0.0;  // Filtro para evitar giros raros
+// Botones
+#define ACCEL_PIN 8      // Acelerador
+#define BRAKE_PIN 3      // Freno
+#define TURBO_PIN 4      // Turbo
 
-// Rango de giro del volante (ajusta si quieres más o menos grados)
+// Filtro del volante
+float filteredAngle = 0.0;
+
+// Rango de giro permitido
 const int MIN_ANGLE = -450;
 const int MAX_ANGLE = 450;
 
 void setup() {
   Serial.begin(115200);
-  pinMode(ACCEL_PIN, INPUT_PULLUP);  // Botón conectado a GND
+
+  // Botones en modo PULLUP (presionado = LOW)
+  pinMode(ACCEL_PIN, INPUT_PULLUP);
+  pinMode(BRAKE_PIN, INPUT_PULLUP);
+  pinMode(TURBO_PIN, INPUT_PULLUP);
 }
 
 void loop() {
-  // -------------------- Volante (potenciómetro) --------------------
+  // -------------------- Volante --------------------
   int raw = analogRead(POT_STEER);
 
   // Convertir a grados
   int angle = map(raw, 0, 1023, MIN_ANGLE, MAX_ANGLE);
 
-  // Suavizado para evitar que el auto gire solo
+  // Suavizado (anti-ruido)
   filteredAngle = (filteredAngle * 0.85f) + (angle * 0.15f);
 
-  // -------------------- Acelerador (botón) --------------------
+  // -------------------- Botones --------------------
   int accel = (digitalRead(ACCEL_PIN) == LOW) ? 1 : 0;
+  int brake = (digitalRead(BRAKE_PIN) == LOW) ? 1 : 0;
+  int turbo = (digitalRead(TURBO_PIN) == LOW) ? 1 : 0;
 
-  // -------------------- Enviar a Unity --------------------
+  // -------------------- Formato enviado --------------------
+  //     ANGULO,ACELERAR,FRENO,TURBO
   Serial.print((int)filteredAngle);
   Serial.print(",");
-  Serial.println(accel);
+  Serial.print(accel);
+  Serial.print(",");
+  Serial.print(brake);
+  Serial.print(",");
+  Serial.println(turbo);
 
-  delay(16); // ~60 actualizaciones por segundo
+  delay(16); // 60 FPS
 }

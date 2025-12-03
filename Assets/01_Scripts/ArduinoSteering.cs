@@ -3,7 +3,7 @@ using System.IO.Ports;
 
 public class ArduinoSteering : MonoBehaviour
 {
-    public string portName = "COM3"; 
+    public string portName = "COM3";
     public int baudRate = 115200;
     public CarMovement carMovement;
 
@@ -12,7 +12,9 @@ public class ArduinoSteering : MonoBehaviour
     void Start()
     {
         serial = new SerialPort(portName, baudRate);
-        serial.ReadTimeout = 30;
+        serial.ReadTimeout = 25;
+        serial.DtrEnable = true;
+        serial.RtsEnable = true;
 
         try
         {
@@ -34,19 +36,31 @@ public class ArduinoSteering : MonoBehaviour
             string line = serial.ReadLine().Trim();
             string[] parts = line.Split(',');
 
-            if (parts.Length == 2)
+            // Esperamos: ANGULO,ACEL,BRK,TURBO (4 valores)
+            if (parts.Length == 4)
             {
                 int angle = int.Parse(parts[0]);
                 int accel = int.Parse(parts[1]);
+                int brake = int.Parse(parts[2]);
+                int turbo = int.Parse(parts[3]);
 
                 carMovement.SetSteerInput(angle);
                 carMovement.SetAccelInput(accel);
+                carMovement.SetBrakeInput(brake);
+                carMovement.SetTurboInput(turbo);
+            }
+            else
+            {
+                Debug.LogWarning("⚠ Datos incompletos: " + line);
             }
         }
-        catch (System.TimeoutException) { }
+        catch (System.TimeoutException)
+        {
+            // No pasa nada, solo no hubo datos this frame
+        }
         catch (System.Exception e)
         {
-            Debug.LogWarning("Error Serial: " + e.Message);
+            Debug.LogWarning("⚠ Error Serial: " + e.Message);
         }
     }
 
