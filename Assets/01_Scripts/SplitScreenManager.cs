@@ -89,6 +89,9 @@ public class SplitScreenManager : MonoBehaviour
         cameraP1.gameObject.SetActive(true);
         cameraP2.gameObject.SetActive(true);
 
+        // Asegurar que hay un AudioListener
+        EnsureAudioListener(cameraP1);
+
         Debug.Log("✓ Split Screen configurado para 2 jugadores");
     }
 
@@ -108,6 +111,9 @@ public class SplitScreenManager : MonoBehaviour
         cameraP1.gameObject.SetActive(true);
         cameraP2.gameObject.SetActive(true);
         cameraP3.gameObject.SetActive(true);
+
+        // Asegurar que hay un AudioListener
+        EnsureAudioListener(cameraP1);
 
         Debug.Log("✓ Split Screen configurado para 3 jugadores");
     }
@@ -130,6 +136,9 @@ public class SplitScreenManager : MonoBehaviour
         cameraP2.gameObject.SetActive(true);
         cameraP3.gameObject.SetActive(true);
         cameraP4.gameObject.SetActive(true);
+
+        // Asegurar que hay un AudioListener
+        EnsureAudioListener(cameraP1);
 
         Debug.Log("✓ Split Screen configurado para 4 jugadores");
     }
@@ -195,5 +204,47 @@ public class SplitScreenManager : MonoBehaviour
     public void SetSmoothness(float newSmoothness)
     {
         cameraSmoothness = newSmoothness;
+    }
+
+    // Asegurar que hay un AudioListener en la escena
+    private void EnsureAudioListener(Camera camera)
+    {
+        if (camera == null) return;
+
+        // Verificar si ya hay un AudioListener en alguna cámara activa
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
+        
+        // Si no hay ningún AudioListener, agregar uno a la primera cámara
+        if (listeners.Length == 0)
+        {
+            if (camera.GetComponent<AudioListener>() == null)
+            {
+                camera.gameObject.AddComponent<AudioListener>();
+                Debug.Log("AudioListener agregado a " + camera.name);
+            }
+        }
+        else
+        {
+            // Si hay AudioListeners, asegurarse de que al menos uno esté en una cámara activa
+            bool hasActiveListener = false;
+            foreach (AudioListener listener in listeners)
+            {
+                if (listener.gameObject.activeInHierarchy)
+                {
+                    hasActiveListener = true;
+                    break;
+                }
+            }
+
+            // Si no hay AudioListener activo, agregar uno a la cámara especificada
+            if (!hasActiveListener)
+            {
+                if (camera.GetComponent<AudioListener>() == null)
+                {
+                    camera.gameObject.AddComponent<AudioListener>();
+                    Debug.Log("AudioListener agregado a " + camera.name + " (ningún otro estaba activo)");
+                }
+            }
+        }
     }
 }
