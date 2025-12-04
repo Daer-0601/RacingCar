@@ -105,37 +105,122 @@ public class WinnerVideoPlayer : MonoBehaviour
         int playerNumber = 0;
 
         // Identificar qué auto es según sus componentes
-        if (winnerCar.GetComponent<CarMovement>() != null)
+        // IMPORTANTE: Verificar primero los componentes más específicos (CarPlayer2, CarPlayer3, CarPlayer4)
+        // antes de verificar CarMovement, ya que algunos autos pueden tener múltiples componentes
+        
+        // Primero, intentar identificar usando GameModeController si está disponible
+        GameModeController gameModeController = FindObjectOfType<GameModeController>();
+        if (gameModeController != null)
         {
-            videoToPlay = videoPlayer1;
-            playerNumber = 1;
-            Debug.Log("WinnerVideoPlayer: Ganador: Auto 1 (CarMovement)");
-        }
-        else if (winnerCar.GetComponent<CarPlayer2>() != null)
-        {
-            videoToPlay = videoPlayer2;
-            playerNumber = 2;
-            Debug.Log("WinnerVideoPlayer: Ganador: Auto 2 (CarPlayer2)");
-        }
-        else if (winnerCar.GetComponent<CarPlayer3>() != null)
-        {
-            videoToPlay = videoPlayer3;
-            playerNumber = 3;
-            Debug.Log("WinnerVideoPlayer: Ganador: Auto 3 (CarPlayer3)");
-        }
-        else if (winnerCar.GetComponent<CarPlayer4>() != null)
-        {
-            videoToPlay = videoPlayer4;
-            playerNumber = 4;
-            Debug.Log("WinnerVideoPlayer: Ganador: Auto 4 (CarPlayer4)");
-        }
-        else
-        {
-            Debug.LogWarning("WinnerVideoPlayer: No se pudo identificar el tipo de auto. Componentes encontrados:");
-            Component[] components = winnerCar.GetComponents<Component>();
-            foreach (Component comp in components)
+            if (gameModeController.player4 != null && gameModeController.player4 == winnerCar)
             {
-                Debug.Log("  - " + comp.GetType().Name);
+                videoToPlay = videoPlayer4;
+                playerNumber = 4;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por GameModeController: Auto 4 - Nombre: " + winnerCar.name);
+            }
+            else if (gameModeController.player3 != null && gameModeController.player3 == winnerCar)
+            {
+                videoToPlay = videoPlayer3;
+                playerNumber = 3;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por GameModeController: Auto 3 - Nombre: " + winnerCar.name);
+            }
+            else if (gameModeController.player2 != null && gameModeController.player2 == winnerCar)
+            {
+                videoToPlay = videoPlayer2;
+                playerNumber = 2;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por GameModeController: Auto 2 - Nombre: " + winnerCar.name);
+            }
+            else if (gameModeController.player1 != null && gameModeController.player1 == winnerCar)
+            {
+                videoToPlay = videoPlayer1;
+                playerNumber = 1;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por GameModeController: Auto 1 - Nombre: " + winnerCar.name);
+            }
+        }
+
+        // Si no se identificó por GameModeController, usar componentes
+        if (videoToPlay == null)
+        {
+            CarPlayer4 cp4 = winnerCar.GetComponent<CarPlayer4>();
+            CarPlayer3 cp3 = winnerCar.GetComponent<CarPlayer3>();
+            CarPlayer2 cp2 = winnerCar.GetComponent<CarPlayer2>();
+            CarMovement cm = winnerCar.GetComponent<CarMovement>();
+
+            // Verificar si el componente está habilitado y existe
+            // Orden: primero los más específicos
+            if (cp4 != null && cp4.enabled)
+            {
+                videoToPlay = videoPlayer4;
+                playerNumber = 4;
+                Debug.Log("WinnerVideoPlayer: Ganador: Auto 4 (CarPlayer4 habilitado) - Nombre: " + winnerCar.name);
+            }
+            else if (cp3 != null && cp3.enabled)
+            {
+                videoToPlay = videoPlayer3;
+                playerNumber = 3;
+                Debug.Log("WinnerVideoPlayer: Ganador: Auto 3 (CarPlayer3 habilitado) - Nombre: " + winnerCar.name);
+            }
+            else if (cp2 != null && cp2.enabled)
+            {
+                videoToPlay = videoPlayer2;
+                playerNumber = 2;
+                Debug.Log("WinnerVideoPlayer: Ganador: Auto 2 (CarPlayer2 habilitado) - Nombre: " + winnerCar.name);
+            }
+            else if (cm != null)
+            {
+                // CarMovement - verificar que NO tenga otros componentes de jugador habilitados
+                if ((cp4 == null || !cp4.enabled) && 
+                    (cp3 == null || !cp3.enabled) && 
+                    (cp2 == null || !cp2.enabled))
+                {
+                    videoToPlay = videoPlayer1;
+                    playerNumber = 1;
+                    Debug.Log("WinnerVideoPlayer: Ganador: Auto 1 (CarMovement, sin otros componentes habilitados) - Nombre: " + winnerCar.name);
+                }
+            }
+        }
+
+        // Si aún no se identificó, intentar por nombre del objeto
+        if (videoToPlay == null)
+        {
+            string carName = winnerCar.name.ToLower();
+            if (carName.Contains("car4") || carName.Contains("player4"))
+            {
+                videoToPlay = videoPlayer4;
+                playerNumber = 4;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por nombre: Auto 4 - Nombre: " + winnerCar.name);
+            }
+            else if (carName.Contains("car3") || carName.Contains("player3"))
+            {
+                videoToPlay = videoPlayer3;
+                playerNumber = 3;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por nombre: Auto 3 - Nombre: " + winnerCar.name);
+            }
+            else if (carName.Contains("car2") || carName.Contains("player2"))
+            {
+                videoToPlay = videoPlayer2;
+                playerNumber = 2;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por nombre: Auto 2 - Nombre: " + winnerCar.name);
+            }
+            else if (carName.Contains("car") || carName.Contains("player1") || carName.Contains("player"))
+            {
+                videoToPlay = videoPlayer1;
+                playerNumber = 1;
+                Debug.Log("WinnerVideoPlayer: Ganador identificado por nombre: Auto 1 - Nombre: " + winnerCar.name);
+            }
+            else
+            {
+                Debug.LogWarning("WinnerVideoPlayer: No se pudo identificar el tipo de auto. Componentes encontrados:");
+                Component[] components = winnerCar.GetComponents<Component>();
+                foreach (Component comp in components)
+                {
+                    bool enabled = false;
+                    if (comp is MonoBehaviour)
+                    {
+                        enabled = ((MonoBehaviour)comp).enabled;
+                    }
+                    Debug.Log("  - " + comp.GetType().Name + " (Enabled: " + enabled + ")");
+                }
             }
         }
 

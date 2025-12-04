@@ -321,11 +321,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 49146647}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c318b3108becc7646852789067ad20e5, type: 3}
+  m_Script: {fileID: 11500000, guid: 539599cb306affb4985d999aadbb187d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 4
-  acceleration: 8
+  maxSpeed: 8
+  acceleration: 5
   reverseSpeed: 6
   steering: 250
   normalDrag: 0.5
@@ -334,10 +334,10 @@ MonoBehaviour:
   minSpeedToSteer: 0.1
   steeringSensitivity: 1
   angularDrag: 5
-  accelerateKey: 273
-  brakeKey: 274
-  leftKey: 276
-  rightKey: 275
+  accelerateKey: 119
+  brakeKey: 115
+  leftKey: 97
+  rightKey: 100
 --- !u!212 &49146652
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -761,8 +761,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c318b3108becc7646852789067ad20e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 12
-  acceleration: 8
+  maxSpeed: 8
+  acceleration: 5
   reverseSpeed: 6
   steering: 250
   normalDrag: 0.5
@@ -1696,13 +1696,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab9f2db86e0baa4483d4f6e41c1e19f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 4
-  acceleration: 8
+  maxSpeed: 8
+  acceleration: 5
   reverseSpeed: 6
   steering: 200
   minSpeedToSteer: 0.1
   steeringDeadzone: 50
-  steeringSensitivity: 1.5
+  steeringSensitivity: 4
   normalDrag: 0.5
   stopDrag: 4
   lateralFriction: 2
@@ -2409,11 +2409,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 698379956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c318b3108becc7646852789067ad20e5, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e4ed066d916f6e408aa14c5d95299b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 4
-  acceleration: 8
+  maxSpeed: 8
+  acceleration: 5
   reverseSpeed: 6
   steering: 250
   normalDrag: 0.5
@@ -2422,10 +2422,10 @@ MonoBehaviour:
   minSpeedToSteer: 0.1
   steeringSensitivity: 1
   angularDrag: 5
-  accelerateKey: 273
-  brakeKey: 274
-  leftKey: 276
-  rightKey: 275
+  accelerateKey: 105
+  brakeKey: 107
+  leftKey: 106
+  rightKey: 108
 --- !u!212 &698379961
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2804,7 +2804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1acc6abd557c0d49992d1d2cfb4b4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portName: COM3
+  portName: COM6
   baudRate: 115200
   carMovement: {fileID: 415139951}
 --- !u!4 &799702660
@@ -4728,10 +4728,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08ba1ea914037a4cb3f5961391592b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoPlayer1: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer2: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer3: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer4: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
+  videoPlayer1: {fileID: 32900000, guid: 6c229fd4ee0101746910d44704ad6afa, type: 3}
+  videoPlayer2: {fileID: 32900000, guid: 63725a27bacbcb34d8389df24d5f49f5, type: 3}
+  videoPlayer3: {fileID: 32900000, guid: c9a505b8fbdafda4b9e1e28bccc68fdd, type: 3}
+  videoPlayer4: {fileID: 32900000, guid: 2a79719b9e84c6d4289587d09fc74cd6, type: 3}
   videoPlayer: {fileID: 976858749}
   videoCanvas: {fileID: 494418726}
   mainMenuSceneName: Start_Panel 1

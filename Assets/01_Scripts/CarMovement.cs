@@ -9,10 +9,17 @@ public class CarMovement : MonoBehaviour
     public float reverseSpeed = 6f;  // velocidad en reversa
 
     [Header("Giro")]
+    [Tooltip("Velocidad base de giro del auto")]
     public float steering = 250f;
+    [Tooltip("Velocidad mínima necesaria para poder girar")]
     public float minSpeedToSteer = 0.1f;
+    [Tooltip("Zona muerta del volante (grados) para evitar drift")]
     public float steeringDeadzone = 20f;
+    [Tooltip("Sensibilidad del giro del volante (1.0 = normal, mayor = más sensible, menor = menos sensible)")]
+    [Range(0.1f, 5.0f)]
     public float steeringSensitivity = 1.5f;
+    [Tooltip("Fricción angular cuando no hay input de giro (ayuda a estabilizar el auto)")]
+    public float angularDrag = 5f;
 
     [Header("Fricción")]
     public float normalDrag = 0.5f;
@@ -26,6 +33,7 @@ public class CarMovement : MonoBehaviour
 
     private float _steerInput = 0f;
     private float _accelInput = 0f; // 1 acelera -1 frena/retro
+    private float _currentAngularDrag = 0f;
 
     private bool _useArduinoInput = false;
 
@@ -34,6 +42,7 @@ public class CarMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _rb.drag = normalDrag;
         _rb.gravityScale = 0f;
+        _rb.angularDrag = 0f; // Controlaremos el angular drag manualmente
     }
 
     void Update()
@@ -56,8 +65,8 @@ public class CarMovement : MonoBehaviour
                 _steerInput = 1f;
         }
 
-        // Evitar giros cuando está quieto
-        if (_rb.velocity.magnitude < 0.05f)
+        // Evitar giros cuando está quieto (solo para teclado, Arduino maneja su propio input)
+        if (!_useArduinoInput && _rb.velocity.magnitude < 0.05f)
         {
             _steerInput = 0f;
             _rb.angularVelocity = 0f;
@@ -80,18 +89,24 @@ public class CarMovement : MonoBehaviour
     {
         _useArduinoInput = true;
 
+        // Aplicar zona muerta
         if (Mathf.Abs(angle) < steeringDeadzone)
         {
             _steerInput = 0f;
         }
         else
         {
+            // Calcular el input ajustado (quitando la zona muerta)
             float adjusted = angle - steeringDeadzone * Mathf.Sign(angle);
-            _steerInput = Mathf.Clamp(
-                (adjusted / (450f - steeringDeadzone)) * steeringSensitivity,
-                -1f,
-                1f
-            );
+            
+            // Normalizar el rango (asumiendo que el volante va de -450 a +450 grados)
+            // El rango efectivo después de quitar la zona muerta es: (450 - deadzone) en cada dirección
+            float maxRange = 450f - steeringDeadzone;
+            float normalizedInput = adjusted / maxRange;
+            
+            // Aplicar sensibilidad (multiplicador que afecta la respuesta del giro)
+            // steeringSensitivity = 1.0 es normal, > 1.0 es más sensible, < 1.0 es menos sensible
+            _steerInput = Mathf.Clamp(normalizedInput * steeringSensitivity, -1f, 1f);
         }
     }
 
@@ -101,7 +116,16 @@ public class CarMovement : MonoBehaviour
     public void SetAccelInput(int accel)
     {
         _useArduinoInput = true;
-        _accelInput = accel == 1 ? 1f : (_accelInput > 0 ? 0f : _accelInput);
+        if (accel == 1)
+        {
+            _accelInput = 1f;
+        }
+        else if (_accelInput > 0f)
+        {
+            // Si estaba acelerando y ahora no, detener suavemente
+            _accelInput = 0f;
+        }
+        // Si estaba frenando, mantener el freno
     }
 
     // ---------------------------
@@ -110,7 +134,16 @@ public class CarMovement : MonoBehaviour
     public void SetBrakeInput(int brake)
     {
         _useArduinoInput = true;
-        _accelInput = brake == 1 ? -1f : (_accelInput < 0 ? 0f : _accelInput);
+        if (brake == 1)
+        {
+            _accelInput = -1f;
+        }
+        else if (_accelInput < 0f)
+        {
+            // Si estaba frenando y ahora no, detener suavemente
+            _accelInput = 0f;
+        }
+        // Si estaba acelerando, mantener la aceleración
     }
 
     // ---------------------------
@@ -133,11 +166,54 @@ public class CarMovement : MonoBehaviour
     private void ApplySteering()
     {
         float speed = _rb.velocity.magnitude;
+        bool hasSteerInput = Mathf.Abs(_steerInput) > 0.01f;
 
-        if (speed > minSpeedToSteer && Mathf.Abs(_steerInput) > 0.01f)
+        // Si no hay input de giro, aplicar fricción angular para detener el giro
+        if (!hasSteerInput)
         {
+            // Aplicar fricción angular para detener el giro gradualmente
+            _currentAngularDrag = Mathf.Lerp(_currentAngularDrag, angularDrag, Time.fixedDeltaTime * 5f);
+            _rb.angularDrag = _currentAngularDrag;
+            
+            // Si la velocidad angular es muy baja, detenerla completamente
+            if (Mathf.Abs(_rb.angularVelocity) < 0.5f)
+            {
+                _rb.angularVelocity = 0f;
+            }
+            
+            return;
+        }
+
+        // Resetear angular drag cuando hay input
+        _rb.angularDrag = 0f;
+        _currentAngularDrag = 0f;
+
+        // Evitar giros cuando está completamente quieto
+        if (speed < 0.05f)
+        {
+            _rb.angularVelocity = 0f;
+            return;
+        }
+
+        // Aplicar giro con sensibilidad ajustable
+        if (speed > minSpeedToSteer)
+        {
+            // Factor de velocidad: más velocidad = más capacidad de giro
             float speedFactor = Mathf.Clamp01(speed / maxSpeed);
-            float steerAmount = _steerInput * steering * speedFactor * Time.fixedDeltaTime;
+            // Asegurar un mínimo de giro incluso a baja velocidad
+            speedFactor = Mathf.Max(speedFactor, 0.4f);
+            
+            // Calcular el giro con sensibilidad del volante
+            float steerAmount = _steerInput * steering * speedFactor * steeringSensitivity * Time.fixedDeltaTime;
+            
+            // Aplicar el giro de forma suave
+            _rb.rotation += steerAmount;
+        }
+        // Si está moviéndose pero muy lento, permitir giro reducido
+        else if (speed > 0.05f)
+        {
+            // Giro mínimo a muy baja velocidad
+            float steerAmount = _steerInput * steering * 0.5f * steeringSensitivity * Time.fixedDeltaTime;
             _rb.rotation += steerAmount;
         }
     }

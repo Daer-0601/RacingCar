@@ -19,11 +19,11 @@ public class CarPlayer4 : MonoBehaviour
     public float steeringSensitivity = 1.0f;
     public float angularDrag = 5f;
 
-    [Header("Controles Jugador 4 (Numpad 8-4-5-6)")]
-    public KeyCode accelerateKey = KeyCode.Keypad8;
-    public KeyCode brakeKey = KeyCode.Keypad5;
-    public KeyCode leftKey = KeyCode.Keypad4;
-    public KeyCode rightKey = KeyCode.Keypad6;
+    [Header("Controles Jugador 4 (IJKL)")]
+    public KeyCode accelerateKey = KeyCode.I;
+    public KeyCode brakeKey = KeyCode.K;
+    public KeyCode leftKey = KeyCode.J;
+    public KeyCode rightKey = KeyCode.L;
 
     private Rigidbody2D _rb;
     private float _steerInput = 0f;

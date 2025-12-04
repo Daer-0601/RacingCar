@@ -6,7 +6,7 @@ public class GameModeController : MonoBehaviour
     public GameObject player1; // Jugador 1 (Arduino)
     public GameObject player2; // Jugador 2 (Flechas ↑↓←→)
     public GameObject player3; // Jugador 3 (IJKL)
-    public GameObject player4; // Jugador 4 (Numpad 8-5-4-6)
+    public GameObject player4; // Jugador 4 (IJKL)
 
     [Header("Componentes de Control")]
     public ArduinoSteering arduinoSteering;
@@ -162,7 +162,7 @@ public class GameModeController : MonoBehaviour
         if (playerCount >= 3)
             Debug.Log("  P3: Teclas WASD (W acelerar, S frenar, A D girar)");
         if (playerCount >= 4)
-            Debug.Log("  P4: Numpad (8 acelerar, 5 frenar, 4 6 girar)");
+            Debug.Log("  P4: Teclas IJKL (I acelerar, K frenar, J L girar)");
     }
 
     private void ConfigurePlayer1()
@@ -311,13 +311,13 @@ public class GameModeController : MonoBehaviour
                 
                 carPlayer4.enabled = true;
                 
-                // Configurar Numpad
-                carPlayer4.accelerateKey = KeyCode.Keypad8;
-                carPlayer4.brakeKey = KeyCode.Keypad5;
-                carPlayer4.leftKey = KeyCode.Keypad4;
-                carPlayer4.rightKey = KeyCode.Keypad6;
+                // Configurar teclas IJKL
+                carPlayer4.accelerateKey = KeyCode.I;
+                carPlayer4.brakeKey = KeyCode.K;
+                carPlayer4.leftKey = KeyCode.J;
+                carPlayer4.rightKey = KeyCode.L;
                 
-                Debug.Log("✓ Player 4: Numpad (8 acelerar, 5 frenar, 4 6 girar)");
+                Debug.Log("✓ Player 4: Teclas IJKL (I acelerar, K frenar, J L girar)");
             }
             else
             {

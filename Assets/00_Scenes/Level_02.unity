@@ -721,56 +721,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.139424, y: 1}
   m_EdgeRadius: 0
---- !u!1 &208949343
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 208949345}
-  - component: {fileID: 208949344}
-  m_Layer: 0
-  m_Name: WinnerVideoPlayer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &208949344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208949343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d08ba1ea914037a4cb3f5961391592b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  videoPlayer1: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer2: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer3: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer4: {fileID: 32900000, guid: 205393ddca443fb43b03babac3132b4d, type: 3}
-  videoPlayer: {fileID: 1666700871}
-  videoCanvas: {fileID: 964449413}
-  mainMenuSceneName: Start_Panel 1
---- !u!4 &208949345
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208949343}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 18
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &218701142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1068,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &249598549
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 249598551}
+  - component: {fileID: 249598550}
+  m_Layer: 0
+  m_Name: WinnerVideoPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &249598550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249598549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08ba1ea914037a4cb3f5961391592b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoPlayer1: {fileID: 32900000, guid: 6c229fd4ee0101746910d44704ad6afa, type: 3}
+  videoPlayer2: {fileID: 32900000, guid: 63725a27bacbcb34d8389df24d5f49f5, type: 3}
+  videoPlayer3: {fileID: 32900000, guid: c9a505b8fbdafda4b9e1e28bccc68fdd, type: 3}
+  videoPlayer4: {fileID: 32900000, guid: 2a79719b9e84c6d4289587d09fc74cd6, type: 3}
+  videoPlayer: {fileID: 1666700871}
+  videoCanvas: {fileID: 964449413}
+  mainMenuSceneName: Start_Panel 1
+--- !u!4 &249598551
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249598549}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277682165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,7 +1542,7 @@ Transform:
   m_Children:
   - {fileID: 1666700870}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -2473,7 +2473,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892018198}
   m_LocalRotation: {x: -0, y: -0, z: 1, w: 0.0001631931}
-  m_LocalPosition: {x: 4.13, y: -0.41, z: 0}
+  m_LocalPosition: {x: 0.07, y: -0.03, z: 0}
   m_LocalScale: {x: 0.9812776, y: 1.0777456, z: 1}
   m_Children: []
   m_Father: {fileID: 2036972626}
@@ -2822,7 +2822,7 @@ RectTransform:
   m_Children:
   - {fileID: 1785673764}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3207,6 +3207,7 @@ MonoBehaviour:
   minSpeedToSteer: 0.1
   steeringDeadzone: 20
   steeringSensitivity: 1.5
+  angularDrag: 5
   normalDrag: 0.5
   stopDrag: 5
   lateralFriction: 2
@@ -5618,7 +5619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1acc6abd557c0d49992d1d2cfb4b4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portName: COM3
+  portName: COM6
   baudRate: 115200
   carMovement: {fileID: 1151152378}
 --- !u!4 &1925702576
@@ -6309,7 +6310,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2036972621}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.35, y: -3.15, z: 0}
+  m_LocalPosition: {x: 2.184, y: -3.224, z: 0}
   m_LocalScale: {x: 0.20673013, y: 0.20832956, z: 1}
   m_Children:
   - {fileID: 866627836}
@@ -6503,7 +6504,7 @@ MonoBehaviour:
   cameraP2: {fileID: 728211096}
   cameraP3: {fileID: 1744497620}
   cameraP4: {fileID: 218701143}
-  player1: {fileID: 0}
+  player1: {fileID: 1151152380}
   player2: {fileID: 221474545}
   player3: {fileID: 2036972626}
   player4: {fileID: 1583815603}
