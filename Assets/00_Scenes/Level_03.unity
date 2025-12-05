@@ -2172,7 +2172,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &519420030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2650,7 +2650,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.36
   m_Pitch: 1.59
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -3247,6 +3247,7 @@ GameObject:
   m_Component:
   - component: {fileID: 998030442}
   - component: {fileID: 998030441}
+  - component: {fileID: 998030443}
   m_Layer: 0
   m_Name: SplitScreenManager
   m_TagString: Untagged
@@ -3291,6 +3292,14 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &998030443
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998030440}
+  m_Enabled: 1
 --- !u!1001 &1016244653
 PrefabInstance:
   m_ObjectHideFlags: 0
