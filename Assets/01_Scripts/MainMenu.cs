@@ -10,6 +10,9 @@ public class MainMenu : MonoBehaviour
     public GameObject mainMenu;
     public GameObject playerSelectMenu; // Panel para elegir número de jugadores
     public GameObject levelSelectMenu;  // Panel para elegir nivel
+    
+    [Header("Controlador de Pantalla de Controles")]
+    public ControlsDisplayController controlsDisplay;
 
     void Start()
     {
@@ -29,6 +32,12 @@ public class MainMenu : MonoBehaviour
             levelSelectMenu.SetActive(false);
         if (optionMenu != null)
             optionMenu.SetActive(false);
+        
+        // Buscar ControlsDisplayController si no está asignado
+        if (controlsDisplay == null)
+        {
+            controlsDisplay = FindObjectOfType<ControlsDisplayController>();
+        }
     }
 
     public void OpenOptions()
@@ -116,7 +125,7 @@ public class MainMenu : MonoBehaviour
         {
             GameModeManager.Instance.SetSelectedLevel(1);
         }
-        LoadGameScene();
+        ShowControlsScreen();
     }
 
     // Seleccionar Nivel 2
@@ -126,7 +135,7 @@ public class MainMenu : MonoBehaviour
         {
             GameModeManager.Instance.SetSelectedLevel(2);
         }
-        LoadGameScene();
+        ShowControlsScreen();
     }
 
     // Seleccionar Nivel 3
@@ -136,7 +145,32 @@ public class MainMenu : MonoBehaviour
         {
             GameModeManager.Instance.SetSelectedLevel(3);
         }
-        LoadGameScene();
+        ShowControlsScreen();
+    }
+    
+    // Mostrar pantalla de controles
+    private void ShowControlsScreen()
+    {
+        int playerCount = 2;
+        int selectedLevel = 1;
+        
+        if (GameModeManager.Instance != null)
+        {
+            playerCount = GameModeManager.Instance.PlayerCount;
+            selectedLevel = GameModeManager.Instance.SelectedLevel;
+        }
+        
+        // Mostrar pantalla de controles
+        if (controlsDisplay != null)
+        {
+            controlsDisplay.ShowControls(playerCount, selectedLevel);
+        }
+        else
+        {
+            // Si no hay ControlsDisplayController, cargar directamente (fallback)
+            Debug.LogWarning("ControlsDisplayController no encontrado. Cargando escena directamente.");
+            LoadGameScene();
+        }
     }
 
     // ========== NAVEGACIÓN ==========
@@ -159,6 +193,23 @@ public class MainMenu : MonoBehaviour
             levelSelectMenu.SetActive(false);
         if (playerSelectMenu != null)
             playerSelectMenu.SetActive(true);
+        if (controlsDisplay != null)
+        {
+            controlsDisplay.HideControls();
+        }
+    }
+    
+    // Volver desde la pantalla de controles a la selección de nivel
+    public void BackToLevelSelectFromControls()
+    {
+        if (controlsDisplay != null)
+        {
+            controlsDisplay.HideControls();
+        }
+        if (levelSelectMenu != null)
+        {
+            levelSelectMenu.SetActive(true);
+        }
     }
 
     // Cargar la escena del juego según el nivel seleccionado

@@ -19,6 +19,9 @@ public class GameModeController : MonoBehaviour
     public SplitScreenManager splitScreenManager;
     public Camera mainCamera;
 
+    [Header("Countdown")]
+    public CountdownController countdownController;
+
     private int playerCount = 2;
 
     void Start()
@@ -26,6 +29,7 @@ public class GameModeController : MonoBehaviour
         FindComponentsIfNeeded();
         DisableAllBots();
         ConfigureGameMode();
+        InitializeCountdown();
     }
 
     // Desactivar todos los bots - ya no se usan
@@ -128,6 +132,18 @@ public class GameModeController : MonoBehaviour
         if (splitScreenManager == null)
         {
             splitScreenManager = FindObjectOfType<SplitScreenManager>();
+        }
+        
+        // Buscar CountdownController si no está asignado
+        if (countdownController == null)
+        {
+            countdownController = FindObjectOfType<CountdownController>();
+            if (countdownController == null)
+            {
+                // Crear CountdownController si no existe
+                GameObject countdownObj = new GameObject("CountdownController");
+                countdownController = countdownObj.AddComponent<CountdownController>();
+            }
         }
     }
 
@@ -354,6 +370,16 @@ public class GameModeController : MonoBehaviour
         if (mainCamera != null)
         {
             mainCamera.gameObject.SetActive(false);
+        }
+    }
+    
+    private void InitializeCountdown()
+    {
+        // Configurar CountdownController
+        if (countdownController != null)
+        {
+            countdownController.gameModeController = this;
+            // El countdown se iniciará automáticamente en su Start()
         }
     }
 }
