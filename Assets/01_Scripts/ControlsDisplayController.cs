@@ -92,8 +92,8 @@ public class ControlsDisplayController : MonoBehaviour
         GameObject containerObj = new GameObject("ContentContainer");
         containerObj.transform.SetParent(panelObj.transform, false);
         RectTransform containerRect = containerObj.AddComponent<RectTransform>();
-        containerRect.anchorMin = new Vector2(0.1f, 0.05f);
-        containerRect.anchorMax = new Vector2(0.9f, 0.95f);
+        containerRect.anchorMin = new Vector2(0.05f, 0.03f);
+        containerRect.anchorMax = new Vector2(0.95f, 0.97f);
         containerRect.sizeDelta = Vector2.zero;
         containerRect.anchoredPosition = Vector2.zero;
         
@@ -121,12 +121,12 @@ public class ControlsDisplayController : MonoBehaviour
         RectTransform titleRect = titleObj.AddComponent<RectTransform>();
         titleRect.anchorMin = new Vector2(0.5f, 0.95f);
         titleRect.anchorMax = new Vector2(0.5f, 0.95f);
-        titleRect.sizeDelta = new Vector2(1000, 120);
+        titleRect.sizeDelta = new Vector2(800, 80);
         titleRect.anchoredPosition = Vector2.zero;
         
         TextMeshProUGUI titleText = titleObj.AddComponent<TextMeshProUGUI>();
         titleText.text = "CONTROLES";
-        titleText.fontSize = 72;
+        titleText.fontSize = 40;
         titleText.alignment = TextAlignmentOptions.Center;
         titleText.color = Color.white;
         titleText.fontStyle = FontStyles.Bold;
@@ -146,7 +146,7 @@ public class ControlsDisplayController : MonoBehaviour
         RectTransform panelRect = panelObj.GetComponent<RectTransform>();
         panelRect.anchorMin = new Vector2(0.5f, yPosition);
         panelRect.anchorMax = new Vector2(0.5f, yPosition);
-        panelRect.sizeDelta = new Vector2(1400, 160);
+        panelRect.sizeDelta = new Vector2(1000, 110);
         panelRect.anchoredPosition = Vector2.zero;
         
         // Título del jugador con mejor diseño
@@ -155,15 +155,15 @@ public class ControlsDisplayController : MonoBehaviour
         
         RectTransform titleRect = titleObj.AddComponent<RectTransform>();
         titleRect.anchorMin = new Vector2(0, 0);
-        titleRect.anchorMax = new Vector2(0.25f, 1);
+        titleRect.anchorMax = new Vector2(0.35f, 1);
         titleRect.sizeDelta = Vector2.zero;
         titleRect.anchoredPosition = Vector2.zero;
-        titleRect.offsetMin = new Vector2(25, 15);
-        titleRect.offsetMax = new Vector2(-15, -15);
+        titleRect.offsetMin = new Vector2(25, 10);
+        titleRect.offsetMax = new Vector2(-10, -10);
         
         TextMeshProUGUI titleText = titleObj.AddComponent<TextMeshProUGUI>();
         titleText.text = playerName;
-        titleText.fontSize = 48;
+        titleText.fontSize = 26;
         titleText.alignment = TextAlignmentOptions.Center;
         titleText.color = new Color(1f, 0.85f, 0f); // Amarillo dorado más brillante
         titleText.fontStyle = FontStyles.Bold;
@@ -175,8 +175,8 @@ public class ControlsDisplayController : MonoBehaviour
         separatorObj.transform.SetParent(panelObj.transform, false);
         
         RectTransform separatorRect = separatorObj.AddComponent<RectTransform>();
-        separatorRect.anchorMin = new Vector2(0.25f, 0);
-        separatorRect.anchorMax = new Vector2(0.25f, 1);
+        separatorRect.anchorMin = new Vector2(0.35f, 0);
+        separatorRect.anchorMax = new Vector2(0.35f, 1);
         separatorRect.sizeDelta = new Vector2(3, 0);
         separatorRect.anchoredPosition = Vector2.zero;
         separatorRect.offsetMin = new Vector2(-1.5f, 20);
@@ -190,19 +190,19 @@ public class ControlsDisplayController : MonoBehaviour
         controlsObj.transform.SetParent(panelObj.transform, false);
         
         RectTransform controlsRect = controlsObj.AddComponent<RectTransform>();
-        controlsRect.anchorMin = new Vector2(0.25f, 0);
+        controlsRect.anchorMin = new Vector2(0.35f, 0);
         controlsRect.anchorMax = new Vector2(1, 1);
         controlsRect.sizeDelta = Vector2.zero;
         controlsRect.anchoredPosition = Vector2.zero;
-        controlsRect.offsetMin = new Vector2(30, 15);
-        controlsRect.offsetMax = new Vector2(-25, -15);
+        controlsRect.offsetMin = new Vector2(20, 10);
+        controlsRect.offsetMax = new Vector2(-15, -10);
         
         TextMeshProUGUI controlsText = controlsObj.AddComponent<TextMeshProUGUI>();
-        controlsText.fontSize = 32;
+        controlsText.fontSize = 18;
         controlsText.alignment = TextAlignmentOptions.Left;
         controlsText.color = Color.white;
         controlsText.enableWordWrapping = true;
-        controlsText.lineSpacing = 15f; // Más espaciado entre líneas
+        controlsText.lineSpacing = 8f; // Espaciado entre líneas para laptop
         controlsText.richText = true; // Habilitar rich text para colores
         
         // Guardar referencia según el jugador
@@ -226,7 +226,7 @@ public class ControlsDisplayController : MonoBehaviour
         RectTransform buttonRect = buttonObj.AddComponent<RectTransform>();
         buttonRect.anchorMin = new Vector2(0.5f, 0.02f);
         buttonRect.anchorMax = new Vector2(0.5f, 0.02f);
-        buttonRect.sizeDelta = new Vector2(400, 100);
+        buttonRect.sizeDelta = new Vector2(300, 70);
         buttonRect.anchoredPosition = Vector2.zero;
         
         Image buttonImage = buttonObj.AddComponent<Image>();
@@ -254,7 +254,7 @@ public class ControlsDisplayController : MonoBehaviour
         
         TextMeshProUGUI buttonText = textObj.AddComponent<TextMeshProUGUI>();
         buttonText.text = "START";
-        buttonText.fontSize = 56;
+        buttonText.fontSize = 32;
         buttonText.alignment = TextAlignmentOptions.Center;
         buttonText.color = Color.white;
         buttonText.fontStyle = FontStyles.Bold;
@@ -303,9 +303,9 @@ public class ControlsDisplayController : MonoBehaviour
         }
         if (player1ControlsText != null)
         {
-            player1ControlsText.text = "<size=36><color=#FFD700>VOLANTE</color></size>\n" +
-                                       "<size=28>• Botón <color=#00FF00>DERECHO</color>: <b>ACELERADOR</b></size>\n" +
-                                       "<size=28>• Botón <color=#FF0000>IZQUIERDO</color>: <b>FRENO</b></size>";
+            player1ControlsText.text = "<size=20><color=#FFD700>VOLANTE</color></size>\n" +
+                                       "<size=16>• Botón <color=#00FF00>DERECHO</color>: <b>ACELERADOR</b></size>\n" +
+                                       "<size=16>• Botón <color=#FF0000>IZQUIERDO</color>: <b>FRENO</b></size>";
         }
         
         // Player 2
@@ -317,10 +317,10 @@ public class ControlsDisplayController : MonoBehaviour
         }
         if (player2ControlsText != null && playerCount >= 2)
         {
-            player2ControlsText.text = "<size=36><color=#FFD700>FLECHAS</color></size>\n" +
-                                       "<size=28>• <color=#00FF00>↑</color> <b>ACELERAR</b></size>\n" +
-                                       "<size=28>• <color=#FF0000>↓</color> <b>FRENAR</b></size>\n" +
-                                       "<size=28>• <color=#00AAFF>← →</color> <b>GIRAR</b></size>";
+            player2ControlsText.text = "<size=20><color=#FFD700>FLECHAS</color></size>\n" +
+                                       "<size=16>• <color=#00FF00>↑</color> <b>ACELERAR</b></size>\n" +
+                                       "<size=16>• <color=#FF0000>↓</color> <b>FRENAR</b></size>\n" +
+                                       "<size=16>• <color=#00AAFF>← →</color> <b>GIRAR</b></size>";
         }
         
         // Player 3
@@ -332,10 +332,10 @@ public class ControlsDisplayController : MonoBehaviour
         }
         if (player3ControlsText != null && playerCount >= 3)
         {
-            player3ControlsText.text = "<size=36><color=#FFD700>WASD</color></size>\n" +
-                                       "<size=28>• <color=#00FF00>W</color> <b>ACELERAR</b></size>\n" +
-                                       "<size=28>• <color=#FF0000>S</color> <b>FRENAR</b></size>\n" +
-                                       "<size=28>• <color=#00AAFF>A D</color> <b>GIRAR</b></size>";
+            player3ControlsText.text = "<size=20><color=#FFD700>WASD</color></size>\n" +
+                                       "<size=16>• <color=#00FF00>W</color> <b>ACELERAR</b></size>\n" +
+                                       "<size=16>• <color=#FF0000>S</color> <b>FRENAR</b></size>\n" +
+                                       "<size=16>• <color=#00AAFF>A D</color> <b>GIRAR</b></size>";
         }
         
         // Player 4
@@ -347,10 +347,10 @@ public class ControlsDisplayController : MonoBehaviour
         }
         if (player4ControlsText != null && playerCount >= 4)
         {
-            player4ControlsText.text = "<size=36><color=#FFD700>IJKL</color></size>\n" +
-                                       "<size=28>• <color=#00FF00>I</color> <b>ACELERAR</b></size>\n" +
-                                       "<size=28>• <color=#FF0000>K</color> <b>FRENAR</b></size>\n" +
-                                       "<size=28>• <color=#00AAFF>J L</color> <b>GIRAR</b></size>";
+            player4ControlsText.text = "<size=20><color=#FFD700>IJKL</color></size>\n" +
+                                       "<size=16>• <color=#00FF00>I</color> <b>ACELERAR</b></size>\n" +
+                                       "<size=16>• <color=#FF0000>K</color> <b>FRENAR</b></size>\n" +
+                                       "<size=16>• <color=#00AAFF>J L</color> <b>GIRAR</b></size>";
         }
     }
     
